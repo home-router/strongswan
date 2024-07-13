@@ -1,0 +1,5 @@
+- name: install strongswan on Archlinux
+  pacman:
+      name: strongswan
+      state: latest
+

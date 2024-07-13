@@ -1,0 +1,6 @@
+- name: install strongswan on Ubuntu
+  apt:
+      name:
+        - strongswan-swanctl
+        - charon-systemd
+      state: latest

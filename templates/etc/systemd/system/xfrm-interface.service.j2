@@ -1,0 +1,26 @@
+[Unit]
+Description=XFRM interface ipsec_{{ item.key }}
+After=network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+# Type oneshot allows multiple ExecStart to execute in serial.
+# Append a "-" in front of command to ignore error and continue execution.
+
+# The underlying interface for xfrm currently is mandatory, but doesn't really matter (lo also works).
+ExecStart=/sbin/ip link add ipsec_{{ item.key }} type xfrm dev lo if_id {{ item.value['xfrm_id'] }}
+ExecStart=/sbin/ip link set ipsec_{{ item.key }} up
+{% for target in item.value['remote_routes'] %}
+ExecStart=ip route add {{ target }} dev ipsec_{{ item.key }}
+{% endfor %}
+
+{% for target in item.value['remote_routes'] %}
+ExecStop=ip route del {{ target }} dev ipsec_{{ item.key }}
+{% endfor %}
+ExecStop=/sbin/ip link set ipsec_{{ item.key }} down
+ExecStop=/sbin/ip link del ipsec_{{ item.key }} type xfrm dev lo if_id {{ item.value['xfrm_id'] }}
+
+[Install]
+WantedBy=multi-user.target

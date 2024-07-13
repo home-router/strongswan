@@ -1,0 +1,37 @@
+connections {
+	{{ item.key }} {
+		version = {{ item.value['ike']['version'] }}
+
+		local_addrs = {{ item.value['local_addrs'] }}
+		remote_addrs = {{ item.value['remote_addrs'] }}
+		local {
+			auth = psk
+			id = {{ item.value['auth']['local_id'] }}
+		}
+		remote {
+			auth = psk
+			id = {{ item.value['auth']['remote_id'] }}
+		}
+		proposals = {{ item.value['ike']['proposals'] }}
+		rekey_time = {{ item.value['ike']['rekey_time'] }}
+		if_id_in = {{ item.value['xfrm_id'] }}
+		if_id_out = {{ item.value['xfrm_id'] }}
+		children {
+			net {
+				local_ts  = 0.0.0.0/0
+				remote_ts = 0.0.0.0/0
+				esp_proposals = {{ item.value['ipsec']['proposals'] }}
+				rekey_time = {{ item.value['ipsec']['rekey_time'] }}
+				start_action = {{ item.value['start_action'] }}
+				hw_offload = auto
+			}
+		}
+	}
+}
+
+secrets {
+	ike-{{ item.key }} {
+		id = {{ item.value['auth']['local_id'] }}
+		secret = {{ item.value['auth']['secret'] }}
+	}
+}

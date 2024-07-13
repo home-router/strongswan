@@ -1,0 +1,26 @@
+# For recommendation on IPsec settings, please read https://www.servercentral.com/blog/bringing-sanity-to-routing-over-ipsec/
+# Site-to-site VPN with pre-shared key.
+strongswan_site_to_site_psk_connections:
+  # An XFRM interface ipsec_conn1 will be created.
+  conn1:
+    # Phase 1 settings.
+    ike:
+      version: 2
+      proposals: aes256-sha1-modp1024
+      rekey_time: 86400
+    # Phase 2 settings.
+    ipsec:
+      proposals: aes128-sha1
+      rekey_time: 43200
+    local_addrs: 0.0.0.0 # Specify this to use local address of the default-route interface.
+    remote_addrs: 1.2.3.4
+    auth:
+      local_id: "local@router"
+      remote_id: "@ipsec_server"
+      # Make sure to use a strong secret when using pre-shared-key.
+      secret: xxxxxxxx
+    start_action: start
+    xfrm_id: 254
+    remote_routes: # Use XFRM interface to route for following subnets/hosts.
+      - 192.168.2.0/24
+      - 10.0.0.0/24
