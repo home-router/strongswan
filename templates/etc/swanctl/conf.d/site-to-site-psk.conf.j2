@@ -6,11 +6,15 @@ connections {
 		remote_addrs = {{ item.value['remote_addrs'] }}
 		local {
 			auth = psk
+{% if 'local_id' in item.value['auth'] %}
 			id = {{ item.value['auth']['local_id'] }}
+{% endif %}
 		}
 		remote {
 			auth = psk
+{% if 'remote_id' in item.value['auth'] %}
 			id = {{ item.value['auth']['remote_id'] }}
+{% endif %}
 		}
 		proposals = {{ item.value['ike']['proposals'] }}
 		rekey_time = {{ item.value['ike']['rekey_time'] }}
@@ -31,7 +35,9 @@ connections {
 
 secrets {
 	ike-{{ item.key }} {
+{% if 'local_id' in item.value['auth'] %}
 		id = {{ item.value['auth']['local_id'] }}
+{% endif %}
 		secret = {{ item.value['auth']['secret'] }}
 	}
 }

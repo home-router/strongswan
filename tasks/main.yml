@@ -1,5 +1,5 @@
 - name: install package on system
-  include: "{{ router_os_distribution }}-pkg.yml"
+  include_tasks: "{{ router_os_distribution }}-pkg.yml"
 
 - name: enable strongswan service
   systemd: name=strongswan enabled=true

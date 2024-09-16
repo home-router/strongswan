@@ -15,6 +15,7 @@ strongswan_site_to_site_psk_connections:
     local_addrs: 0.0.0.0 # Specify this to use local address of the default-route interface.
     remote_addrs: 1.2.3.4
     auth:
+      # local_id and remote_id are only required if using dial up vpn.
       local_id: "local@router"
       remote_id: "@ipsec_server"
       # Make sure to use a strong secret when using pre-shared-key.
