@@ -21,22 +21,30 @@ connections {
 		if_id_in = {{ item.value['xfrm_id'] }}
 		if_id_out = {{ item.value['xfrm_id'] }}
 		children {
-			net {
-				local_ts  = 0.0.0.0/0
-				remote_ts = 0.0.0.0/0
+{% for ts in item.value['traffic_selectors'] %}
+			{{ ts['name'] }} {
+				local_ts  = {{ ts['local_ts'] }}
+				remote_ts = {{ ts['remote_ts'] }}
 				esp_proposals = {{ item.value['ipsec']['proposals'] }}
 				rekey_time = {{ item.value['ipsec']['rekey_time'] }}
 				start_action = {{ item.value['start_action'] }}
 				hw_offload = auto
 			}
+{% endfor %}
 		}
 	}
 }
 
 secrets {
-	ike-{{ item.key }} {
+	ike-{{ item.key }}-1 {
 {% if 'local_id' in item.value['auth'] %}
 		id = {{ item.value['auth']['local_id'] }}
+{% endif %}
+		secret = {{ item.value['auth']['secret'] }}
+	}
+	ike-{{ item.key }}-2 {
+{% if 'remote_id' in item.value['auth'] %}
+		id = {{ item.value['auth']['remote_id'] }}
 {% endif %}
 		secret = {{ item.value['auth']['secret'] }}
 	}
