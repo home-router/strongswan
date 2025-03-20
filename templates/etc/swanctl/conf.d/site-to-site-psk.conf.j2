@@ -40,12 +40,12 @@ secrets {
 {% if 'local_id' in item.value['auth'] %}
 		id = {{ item.value['auth']['local_id'] }}
 {% endif %}
-		secret = {{ item.value['auth']['secret'] }}
+		secret = "{{ item.value['auth']['secret'] }}"
 	}
 	ike-{{ item.key }}-2 {
 {% if 'remote_id' in item.value['auth'] %}
 		id = {{ item.value['auth']['remote_id'] }}
 {% endif %}
-		secret = {{ item.value['auth']['secret'] }}
+		secret = "{{ item.value['auth']['secret'] }}"
 	}
 }
